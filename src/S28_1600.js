@@ -28,7 +28,7 @@ async function test(site){
         findResult : "findResult"
     };
     brokenInfo.push(map); 
-
+    
     dataParsing.parsingData(path + site+'_client_error_(4xx)_inlinks.xlsx', brokenInfo);                                         
 
     var i;

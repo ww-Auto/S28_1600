@@ -30,8 +30,7 @@ async function test(){
         findResult : "findResult"
     };
 
-    result.push(map); 
-
+    brokenInfo.push(map); 
     await dataParsing.parsingData(path + site+'_client_error_(4xx)_inlinks.xlsx', brokenInfo);                                         
     
     var findResult = false;
@@ -56,8 +55,7 @@ async function test(){
 
     fs.writeFileSync(savepath +site+ '_brokenlink_result.json',JSON.stringify(result,null,2)); 
     console.log("저장완료");
-    process.exit(0);
-    
+    process.exit(0);    
     
     async function openTab(brokenInfo){            
         var xPath = brokenInfo.xpath;

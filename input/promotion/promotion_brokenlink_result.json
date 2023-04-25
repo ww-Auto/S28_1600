@@ -1,14 +1,14 @@
 [
   {
-    "Num": "num",
-    "Type": "type",
-    "Source": "source",
-    "Destination": "destination",
-    "Alttext": "alttext",
-    "Anchor": "anchor",
-    "Link Path": "xpath",
-    "Link Position": "linkposition",
-    "findResult": "findResult"
+    "num": 0,
+    "type": "HTTP Redirect",
+    "source": "https://www.samsung.com/se/offer/lifestyle-tv/LSP7T%20The%20Premiere%204K%20UHD%20laser%20projector|%20Samsung%20Sverige",
+    "destination": "https://www.samsung.com/se/offer/lifestyle-tv/LSP7T%20The%20Premiere%204K%20UHD%20laser%20projector|%20Samsung%20Sverige/",
+    "alttext": "",
+    "anchor": "",
+    "xpath": "",
+    "linkposition": "",
+    "findResult": "N/A_Not source list"
   },
   {
     "num": 2,
@@ -20,17 +20,6 @@
     "xpath": "//body/div[@id='wrap']/div[@id='content']/div/div/div/div/div[3]/div/div[4]/div/div/div/div/p[94]/a",
     "linkposition": "Content",
     "findResult": "N/A_Not source list"
-  },
-  {
-    "num": 6,
-    "type": "Hyperlink",
-    "source": "https://www.samsung.com/se/offer/galaxy-week/",
-    "destination": "https://www.samsung.com/se/smartphones/galaxy-s20/buy/",
-    "alttext": "",
-    "anchor": "Läs mer",
-    "xpath": "//body/div/div[@id='content']/div/div/div/div/div[2]/div/div[3]/div[@class='static-content'][1]/div/div[@class='product-list'][2]/div/div[@class='read-more']/a",
-    "linkposition": "Content",
-    "findResult": "true"
   },
   {
     "num": 4,
@@ -62,6 +51,17 @@
     "alttext": "Galaxy S20 FE 5G",
     "anchor": "",
     "xpath": "//body/div/div[@id='content']/div/div/div/div/div[2]/div/div[3]/div[@class='static-content'][1]/div/div[@class='product-list'][2]/div/div[@class='product-image']/a",
+    "linkposition": "Content",
+    "findResult": "true"
+  },
+  {
+    "num": 6,
+    "type": "Hyperlink",
+    "source": "https://www.samsung.com/se/offer/galaxy-week/",
+    "destination": "https://www.samsung.com/se/smartphones/galaxy-s20/buy/",
+    "alttext": "",
+    "anchor": "Läs mer",
+    "xpath": "//body/div/div[@id='content']/div/div/div/div/div[2]/div/div[3]/div[@class='static-content'][1]/div/div[@class='product-list'][2]/div/div[@class='read-more']/a",
     "linkposition": "Content",
     "findResult": "true"
   },
@@ -153,15 +153,15 @@
     "findResult": "true"
   },
   {
-    "num": 7,
+    "num": 17,
     "type": "Hyperlink",
-    "source": "https://www.samsung.com/my/offer/the-perfect-gift/",
-    "destination": "https://p6-qa.samsung.com/test/gmc/coe/curated/22-holiday/occasion/",
+    "source": "https://www.samsung.com/my/trade-in/",
+    "destination": "https://www.samsung.com////www.samsung.com/my/watches/galaxy-watch/",
     "alttext": "",
-    "anchor": "Housewarming Whether newly moved or newly wedded, help them keep their new home clean the smarter way.",
-    "xpath": "//body/div/div[@id='content']/div/div/div[1]/div/div[13]/section/div[1]/div[8]/div/div/div[@class='ex-article-feed-column__item'][1]/div/div/a",
+    "anchor": "Buy now",
+    "xpath": "//body/div/div[@id='content']/div/div/div[1]/div/div[6]/div/div[1]/div[1]/div[4]/div/div[@class='feature-column-carousel__content']/div[@class='feature-column-carousel__button']/a",
     "linkposition": "Content",
-    "findResult": "p6-qa"
+    "findResult": "true"
   },
   {
     "num": 19,
@@ -175,13 +175,13 @@
     "findResult": "N/A_Not source list"
   },
   {
-    "num": 8,
+    "num": 7,
     "type": "Hyperlink",
     "source": "https://www.samsung.com/my/offer/the-perfect-gift/",
     "destination": "https://p6-qa.samsung.com/test/gmc/coe/curated/22-holiday/occasion/",
     "alttext": "",
-    "anchor": "Retirement Welcome them to their newly-found years of freedom with gifts that will keep them healthy.",
-    "xpath": "//body/div/div[@id='content']/div/div/div[1]/div/div[13]/section/div[1]/div[8]/div/div/div[@class='ex-article-feed-column__item'][2]/div/div/a",
+    "anchor": "Housewarming Whether newly moved or newly wedded, help them keep their new home clean the smarter way.",
+    "xpath": "//body/div/div[@id='content']/div/div/div[1]/div/div[13]/section/div[1]/div[8]/div/div/div[@class='ex-article-feed-column__item'][1]/div/div/a",
     "linkposition": "Content",
     "findResult": "p6-qa"
   },
@@ -193,6 +193,17 @@
     "alttext": "",
     "anchor": "Baby shower With their bundle of joy on the way, here are some great nursing hacks for parents-to-be.",
     "xpath": "//body/div/div[@id='content']/div/div/div[1]/div/div[13]/section/div[1]/div[8]/div/div/div[@class='ex-article-feed-column__item'][3]/div/div/a",
+    "linkposition": "Content",
+    "findResult": "p6-qa"
+  },
+  {
+    "num": 8,
+    "type": "Hyperlink",
+    "source": "https://www.samsung.com/my/offer/the-perfect-gift/",
+    "destination": "https://p6-qa.samsung.com/test/gmc/coe/curated/22-holiday/occasion/",
+    "alttext": "",
+    "anchor": "Retirement Welcome them to their newly-found years of freedom with gifts that will keep them healthy.",
+    "xpath": "//body/div/div[@id='content']/div/div/div[1]/div/div[13]/section/div[1]/div[8]/div/div/div[@class='ex-article-feed-column__item'][2]/div/div/a",
     "linkposition": "Content",
     "findResult": "p6-qa"
   },
@@ -217,17 +228,6 @@
     "xpath": "//body/div/section[@class='srp']/div/div[@id='no-result-container']/div/div[2]/div/div/div/div[1]/div[@class='su11-link-card__list-item'][3]/div/div[@class='su11-link-card__list-item-cta']/span[@class='su11-link-card__list-item-cta-wrap'][2]/a",
     "linkposition": "Content",
     "findResult": "N/A_Not source list"
-  },
-  {
-    "num": 17,
-    "type": "Hyperlink",
-    "source": "https://www.samsung.com/my/trade-in/",
-    "destination": "https://www.samsung.com////www.samsung.com/my/watches/galaxy-watch/",
-    "alttext": "",
-    "anchor": "Buy now",
-    "xpath": "//body/div/div[@id='content']/div/div/div[1]/div/div[6]/div/div[1]/div[1]/div[4]/div/div[@class='feature-column-carousel__content']/div[@class='feature-column-carousel__button']/a",
-    "linkposition": "Content",
-    "findResult": "true"
   },
   {
     "num": 24,
@@ -307,6 +307,17 @@
     "findResult": "N/A_Not source list"
   },
   {
+    "num": 18,
+    "type": "Hyperlink",
+    "source": "https://www.samsung.com/my/offer/consumer-voices/",
+    "destination": "https://p6-qa.samsung.com/my/offer/consumer-voices/form/",
+    "alttext": "",
+    "anchor": "Submit now",
+    "xpath": "//body/div[@id='wrap']/div[@id='content']/div/div/div/div/div[15]/section/div/div/div/div/div/a",
+    "linkposition": "Content",
+    "findResult": "true"
+  },
+  {
     "num": 32,
     "type": "Hyperlink",
     "source": "https://www.samsung.com/my/support/newsalert/",
@@ -327,17 +338,6 @@
     "xpath": "//body/div/div[@id='content']/div/div/div[6]/div[2]/div[@class='su-g-link-card'][1]/div/div/div/div[1]/div[@class='su11-link-card__list-item'][3]/div/div[@class='su11-link-card__list-item-cta']/span[@class='su11-link-card__list-item-cta-wrap'][2]/a",
     "linkposition": "Content",
     "findResult": "N/A_Not source list"
-  },
-  {
-    "num": 18,
-    "type": "Hyperlink",
-    "source": "https://www.samsung.com/my/offer/consumer-voices/",
-    "destination": "https://p6-qa.samsung.com/my/offer/consumer-voices/form/",
-    "alttext": "",
-    "anchor": "Submit now",
-    "xpath": "//body/div[@id='wrap']/div[@id='content']/div/div/div/div/div[15]/section/div/div/div/div/div/a",
-    "linkposition": "Content",
-    "findResult": "true"
   },
   {
     "num": 34,
@@ -362,17 +362,6 @@
     "findResult": "true"
   },
   {
-    "num": 35,
-    "type": "Hyperlink",
-    "source": "https://www.samsung.com/my/business/offers/",
-    "destination": "https://account.samsung.com/accounts/v1/TOKO/terms?itnlYN=Y",
-    "alttext": "",
-    "anchor": "Samsung account",
-    "xpath": "//body/div[@id='wrap']/div[@id='content']/div/div/div/div/div[2]/div/div[2]/div/div[1]/div/div[@class='feature-benefit-card__text-wrap']/div/div/h3/a",
-    "linkposition": "Content",
-    "findResult": "true"
-  },
-  {
     "num": 36,
     "type": "Hyperlink",
     "source": "https://www.samsung.com/my/offer/consumer-voices/",
@@ -381,6 +370,17 @@
     "anchor": "All reviews",
     "xpath": "//body/div[@id='wrap']/div[@id='content']/div/div/div/div/div[2]/div/div/div/div[@class='sticky-navigation-text__mobile-wrap']/div/div/ul/li[@class='sticky-navigation-text__item'][6]/a",
     "linkposition": "Navigation",
+    "findResult": "true"
+  },
+  {
+    "num": 35,
+    "type": "Hyperlink",
+    "source": "https://www.samsung.com/my/business/offers/",
+    "destination": "https://account.samsung.com/accounts/v1/TOKO/terms?itnlYN=Y",
+    "alttext": "",
+    "anchor": "Samsung account",
+    "xpath": "//body/div[@id='wrap']/div[@id='content']/div/div/div/div/div[2]/div/div[2]/div/div[1]/div/div[@class='feature-benefit-card__text-wrap']/div/div/h3/a",
+    "linkposition": "Content",
     "findResult": "true"
   },
   {
@@ -614,17 +614,6 @@
     "findResult": "true"
   },
   {
-    "num": 59,
-    "type": "Hyperlink",
-    "source": "https://www.samsung.com/se/offer/fold3-flip3-tradein/",
-    "destination": "https://samsung.foxway.tech/SE/privacy-policy",
-    "alttext": "",
-    "anchor": "https://samsung.foxway.tech/SE/privacy-policy",
-    "xpath": "//body/div/div[@id='content']/div/div/div/div/div[3]/div/div/p/a[1]",
-    "linkposition": "Content",
-    "findResult": "true"
-  },
-  {
     "num": 41,
     "type": "Hyperlink",
     "source": "https://www.samsung.com/my/offer/the-perfect-gift/",
@@ -656,6 +645,17 @@
     "xpath": "//body/div/div[@id='content']/div/div/div[1]/div/div[13]/section/div[1]/div[5]/div/div/div[@class='ex-article-feed-column__item'][5]/div/div/a",
     "linkposition": "Content",
     "findResult": "p6-qa"
+  },
+  {
+    "num": 59,
+    "type": "Hyperlink",
+    "source": "https://www.samsung.com/se/offer/fold3-flip3-tradein/",
+    "destination": "https://samsung.foxway.tech/SE/privacy-policy",
+    "alttext": "",
+    "anchor": "https://samsung.foxway.tech/SE/privacy-policy",
+    "xpath": "//body/div/div[@id='content']/div/div/div/div/div[3]/div/div/p/a[1]",
+    "linkposition": "Content",
+    "findResult": "true"
   },
   {
     "num": 60,
