@@ -5,14 +5,14 @@ import * as clickEvent from '../lib/clickEvent.js';
 import * as dataParsing from '../lib/dataParsing.js';
 import * as rowSetting from '../lib/rowSetting.js';
 let result = new Array();
-let maxTabCount = 5;
+let maxTabCount = 3;
 
-test();
+test(); //이것이 최종이 될듯,,,,, gnb부분 주석처리함(JK코드로1405 나갈 예정)
 
 async function test(){  
     var path = '../input/'; 
     var site = "promotion"; 
-    var savepath = path +site+"/"; 
+    var savepath =path+'../' +site+"/output/";
     mkdir(savepath); 
 
     var brokenInfo = new Array();
@@ -31,8 +31,9 @@ async function test(){
     };
 
     brokenInfo.push(map); 
-    await dataParsing.parsingData(path + site+'_client_error_(4xx)_inlinks.xlsx', brokenInfo);                                         
-    
+    await dataParsing.parsingData(path + site+'_client_error_(4xx)_inlinks.xlsx', brokenInfo);
+    await dataParsing.parsingData(path + site+'_server_error_(5xx)_inlinks.xlsx', brokenInfo);                                         
+    // await dataParsing.parsingData(path + site+'.xlsx', brokenInfo);  
     var findResult = false;
     var one_depth = true;
 
@@ -54,8 +55,13 @@ async function test(){
     await browser.close();    
 
     fs.writeFileSync(savepath +site+ '_brokenlink_result.json',JSON.stringify(result,null,2)); 
+    const workBook = xlsx.utils.book_new();
+    var workSheet = xlsx.utils.json_to_sheet(result);
+    xlsx.utils.book_append_sheet(workBook, workSheet, site);
+    xlsx.writeFile(workBook, savepath +site+ '_brokenlink_result.xlsx');
     console.log("저장완료");
     process.exit(0);    
+      
     
     async function openTab(brokenInfo){            
         var xPath = brokenInfo.xpath;
@@ -69,21 +75,14 @@ async function test(){
         var linkposition = brokenInfo.linkposition; 
         var status = "";
         var num = brokenInfo.num; 
-    
+
+        
+        
         if(one_depth == true) {
             var filter_url = sourceInfo.filter(function(input){
                 return input.Address == sourceurl;
             });
-
             try{
-                if(destination.includes('p6')) {
-                    rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult);
-                    brokenInfo.findResult ="p6-qa";  
-                }
-                if(type=='HTML Canonical'){
-                    rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult);
-                    brokenInfo.findResult = "Canonical";    
-                }
                 if(filter_url == null || filter_url == ""){
                     rowSetting.setRow(num, type, sourceurl, destination, alttext,  status, anchor, xPath, linkposition,findResult );
                     brokenInfo.findResult ="N/A_Not source list";   
@@ -92,39 +91,99 @@ async function test(){
                 console.log(e)
             }
          }
+        if(type=='Image'){
+            rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult);
+            brokenInfo.findResult = "Image";    
+        }
     try{          
        if(brokenInfo.findResult !="N/A_Not source list" ){
-            await page.goto(sourceurl).catch(error => { 
+
+           var response = await page.goto(sourceurl).catch(error => { 
                 console.log("not go to url", error); 
-            });                    
-
+            });        
+            console.log(response.url()+sourceurl)   
+            if(response.url() != sourceurl){
+                console.log("goto 소스" + brokenInfo.source+" 현재 url"+page.url())
+                rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult );
+                brokenInfo.findResult ="Redirect Source URL";
+                    
+            }
+            
+           
             await clickEvent.clickCookie(page);
-            await clickEvent.expendAll(page);
-
+            // await clickEvent.expendAll(page);
+            await page.waitForTimeout(500);
+            // await page.mouse.wheel(0,9999);
+           
+            
             const findXpath = page.locator(xPath); // << 전역설정 바꾸면 시간단축가능 "locator" 단독으로는 timeout 세팅 불가능. locator.click({timeout:x}); 와 같이는 가능
-
+            // await androidDevice.scroll(xPath,down,3000);
             if(findXpath != null || !findXpath.isEmpty() || findXpath != [] || findXpath != "[]"){   
-                findResult = await clickEvent.clickItem(findXpath); 
+                // if(linkposition.includes('Navigation')){         //navigation 검증 부분,,,JK1405 업데이트로 이부분은 주석하고 돌릴예정
+                // for(var li of await page.locator('.nv00-gnb__l0-menu-btn').all()){
+
+                //     await li.hover();
+                //     await page.waitForTimeout(500);
+                //     console.log(await li.innerText());
+                    
+                //     try{
+                //         await page.locator(xPath).click({timeout:2000});
+                //         console.log("found")
+                //         findResult = true; //xpath 찾고 다음 gnb메뉴로 넘어가기 
+                //         await page.waitForTimeout(500);
+
+                //         break;
+                //     }catch(e){
+
+                //     }                        
+                    
+                // }  
+
+                // }else{
+                //     await page.waitForTimeout(500);
+                //     await page.mouse.wheel(0,9999);
+                //     await page.waitForTimeout(500);
+                //     await page.mouse.wheel(9999,0);
+                    findResult = await clickEvent.clickItem(findXpath); 
+                //  }
+
                 // console.log(findResult+"findResult")
             }
             if(findResult == true){
                 await page.waitForTimeout(1000);
-                const response = await page.goto(destination, { timeout: 10000 }).catch(e => { });
+                
                 try{
                     status = response.status(); 
                     rowSetting.setRow(num, type, sourceurl, destination, alttext,  status, anchor, xPath, linkposition,findResult );
                     brokenInfo.findResult ="true";
+
+                    if(destination.includes('https://p6')) {
+                    rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult);
+                    brokenInfo.findResult ="p6-qa";  
+                }
+                    
                 }catch(e){
                     status = -1; 
                 }
-            }else{
-                if(anchor == "" || anchor == null || anchor == 'undefined' || anchor.includes("{{")) {
+            }else if(anchor == "" || anchor == null || anchor == 'undefined' || anchor.includes("{{")) {
                     if(alttext == "" ||  alttext == null || alttext == 'undefined'){
                         rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult );
-                            brokenInfo.findResult ="N/A_anchor is empty or invalid";
-                    }
+                        brokenInfo.findResult ="N/A_anchor is empty or invalid";
+                    }if(type.includes('HTML Canonical')){
+                        rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult);
+                        brokenInfo.findResult = "Canonical";    
+                    } 
+            }
+            else if(findResult == false) { //
+                rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult );
+                brokenInfo.findResult ="false";
+                if(destination.includes('https://p6')) {
+                rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult);
+                brokenInfo.findResult ="p6-qa";  
                 }
-            }    
+            }
+            
+               
             console.log(brokenInfo);
        }
        }catch(e){
