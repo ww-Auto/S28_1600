@@ -7,16 +7,17 @@ import * as rowSetting from '../lib/rowSetting.js';
 let result = new Array();
 let maxTabCount = 3;
 
-test(); //이것이 최종이 될듯,,,,, gnb부분 주석처리함(JK코드로1405 나갈 예정)
-
-async function test(){  
-    var path = '../input/'; 
-    var site = "promotion"; 
-    var savepath =path+'../' +site+"/output/";
+// test(sc); //이것이 최종이 될듯,,,,, gnb부분 주석처리함(JK코드로1405 나갈 예정)
+test()
+// export async function task(sc){  
+    export async function test(){  
+    var path = '../input/TEST/'; 
+     var site = "levant"; 
+    var savepath =path+"/output/";
     mkdir(savepath); 
 
     var brokenInfo = new Array();
-    var sourceInfo = await dataParsing.getSourceList(path + "list_mode_export.xlsx"); 
+    // var sourceInfo = await dataParsing.getSourceList(path + "list_mode_export.xlsx"); 
 
     const map = {
         Num : "num", 
@@ -31,8 +32,8 @@ async function test(){
     };
 
     brokenInfo.push(map); 
-    await dataParsing.parsingData(path + site+'_client_error_(4xx)_inlinks.xlsx', brokenInfo);
-    await dataParsing.parsingData(path + site+'_server_error_(5xx)_inlinks.xlsx', brokenInfo);                                         
+    await dataParsing.parsingData(path +site+'_client_error_(4xx)_inlinks.xlsx', brokenInfo);
+    await dataParsing.parsingData(path +site+'_server_error_(5xx)_inlinks.xlsx', brokenInfo);                                         
     // await dataParsing.parsingData(path + site+'.xlsx', brokenInfo);  
     var findResult = false;
     var one_depth = true;
@@ -77,37 +78,45 @@ async function test(){
         var num = brokenInfo.num; 
 
         
-        
+            
         if(one_depth == true) {
-            var filter_url = sourceInfo.filter(function(input){
-                return input.Address == sourceurl;
-            });
-            try{
-                if(filter_url == null || filter_url == ""){
-                    rowSetting.setRow(num, type, sourceurl, destination, alttext,  status, anchor, xPath, linkposition,findResult );
-                    brokenInfo.findResult ="N/A_Not source list";   
-                }
-            }catch(e){
-                console.log(e)
-            }
+            // var filter_url = sourceInfo.filter(function(input){
+            //     return input.Address == sourceurl;
+            // });
+            // try{
+            //     if(filter_url == null || filter_url == ""){
+            //         rowSetting.setRow(num, type, sourceurl, destination, alttext,  status, anchor, xPath, linkposition,findResult );
+            //         brokenInfo.findResult ="N/A_Not source list";   
+            //     }
+            // }catch(e){
+            //     console.log(e)
+            // }
          }
-        if(type=='Image'){
-            rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult);
-            brokenInfo.findResult = "Image";    
-        }
+   
     try{          
        if(brokenInfo.findResult !="N/A_Not source list" ){
-
+        if(type=='Image'){
+            //blank.gif, common.png 삭제
+            if((destination.includes("blank.gif"))||(destination.includes("common.png"))){
+                rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, brokenInfo.findResult = "N/A_Empty image");
+  
+            }
+            else{
+                rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, brokenInfo.findResult = "Image Check");
+                console.log("bread crumb"); 
+            }
+            
+        }
            var response = await page.goto(sourceurl).catch(error => { 
                 console.log("not go to url", error); 
             });        
             console.log(response.url()+sourceurl)   
-            if(response.url() != sourceurl){
-                console.log("goto 소스" + brokenInfo.source+" 현재 url"+page.url())
-                rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult );
-                brokenInfo.findResult ="Redirect Source URL";
+            // if(response.url() != sourceurl){
+            //     console.log("goto 소스" + brokenInfo.source+" 현재 url"+page.url())
+            //     rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult );
+            //     brokenInfo.findResult ="Redirect Source URL";
                     
-            }
+            // }
             
            
             await clickEvent.clickCookie(page);
@@ -121,70 +130,73 @@ async function test(){
             if(findXpath != null || !findXpath.isEmpty() || findXpath != [] || findXpath != "[]"){   
                 // if(linkposition.includes('Navigation')){         //navigation 검증 부분,,,JK1405 업데이트로 이부분은 주석하고 돌릴예정
                 // for(var li of await page.locator('.nv00-gnb__l0-menu-btn').all()){
-
                 //     await li.hover();
                 //     await page.waitForTimeout(500);
                 //     console.log(await li.innerText());
-                    
                 //     try{
                 //         await page.locator(xPath).click({timeout:2000});
                 //         console.log("found")
                 //         findResult = true; //xpath 찾고 다음 gnb메뉴로 넘어가기 
                 //         await page.waitForTimeout(500);
-
                 //         break;
                 //     }catch(e){
-
-                //     }                        
-                    
+                //     }                          
                 // }  
-
                 // }else{
                 //     await page.waitForTimeout(500);
                 //     await page.mouse.wheel(0,9999);
                 //     await page.waitForTimeout(500);
                 //     await page.mouse.wheel(9999,0);
                     findResult = await clickEvent.clickItem(findXpath); 
-                //  }
-
+                 }
                 // console.log(findResult+"findResult")
-            }
+            // }
             if(findResult == true){
                 await page.waitForTimeout(1000);
-                
                 try{
                     status = response.status(); 
-                    rowSetting.setRow(num, type, sourceurl, destination, alttext,  status, anchor, xPath, linkposition,findResult );
-                    brokenInfo.findResult ="true";
+                    rowSetting.setRow(num, type, sourceurl, destination, alttext,  status, anchor, xPath, linkposition,brokenInfo.findResult ="TRUE");
+
 
                     if(destination.includes('https://p6')) {
-                    rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult);
-                    brokenInfo.findResult ="p6-qa";  
-                }
-                    
+                    rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, brokenInfo.findResult ="p6-qa");
+                    if(type=='Image'){
+                        //blank.gif, common.png 삭제
+                        if((destination.includes("blank.gif"))||(destination.includes("common.png"))){
+                            rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, brokenInfo.findResult = "N/A_Empty image"); 
+                        } 
+                    }      
+                }   
                 }catch(e){
                     status = -1; 
                 }
             }else if(anchor == "" || anchor == null || anchor == 'undefined' || anchor.includes("{{")) {
                     if(alttext == "" ||  alttext == null || alttext == 'undefined'){
-                        rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult );
-                        brokenInfo.findResult ="N/A_anchor is empty or invalid";
+                        rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, brokenInfo.findResult ="N/A_anchor is empty or invalid" );
                     }if(type.includes('HTML Canonical')){
-                        rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult);
-                        brokenInfo.findResult = "Canonical";    
+                        rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, brokenInfo.findResult = "Canonical");
                     } 
             }
             else if(findResult == false) { //
-                rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult );
-                brokenInfo.findResult ="false";
+                rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, brokenInfo.findResult ="FALSE" );
+                // ;
                 if(destination.includes('https://p6')) {
-                rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, findResult);
-                brokenInfo.findResult ="p6-qa";  
+                rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, brokenInfo.findResult ="p6-qa" );
+                // 
                 }
             }
-            
-               
-            console.log(brokenInfo);
+            if(type=='Image'){
+                //blank.gif, common.png 삭제
+                if((destination.includes("blank.gif"))||(destination.includes("common.png"))){
+                    rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, brokenInfo.findResult = "N/A_Empty image");
+      
+                }
+                else{
+                    rowSetting.setRow(num, type, sourceurl, destination, alttext, status, anchor, xPath, linkposition, brokenInfo.findResult = "Image Check");
+                    console.log("bread crumb"); 
+                }
+            }    
+            console.log(brokenInfo)
        }
        }catch(e){
         console.log(e)
