@@ -1,0 +1,192 @@
+import cluster from 'cluster';
+import {task} from "./S28_1601.js";
+
+if(cluster.isMaster) {
+    // var sitearr = Object.keys(urlList);
+    // 누락 국가 확인용 
+    //var sitearr = ["sg", "dk"];
+    //node cluster_BL
+
+    var sitearr = [
+        "PD"
+        // "PF"
+        //"MKT"
+        //"0613footer"
+        // "ae_ar",//
+        // "ae",
+        // "africa_en",
+        // "africa_fr",
+        // "africa_pt",
+        // "al",
+        // "ar",
+        // "at",
+        // "au",
+        // "az",
+        // "ba",
+        // "bd",
+        // "be_fr",
+        // "be",
+        // "bg",
+        // "br",
+        // "ca_fr",
+        // "ca",
+        // "ch_fr",
+        // "ch",//
+        // "cl",
+        // "cn",
+        // "co",
+        // "cz",
+        // "de",
+        // "dk",
+        // "ee",
+        // "eg",
+        // "es",
+        // "fi",
+        // "fr",
+        // "ge",
+        // "gr",
+        // "hk_en",
+        // "hk",
+        // "hr",
+        // "hu",
+        // "id",
+        // "ie",
+        // "il",
+        // "in",
+        // "iq_ar",
+        // "iq_ku",
+        // "iran",
+        // "it",
+        // "jp",
+        // "kz_kz",
+        // "kz_ru",
+        // "latin_en",
+        // "latin",
+        // "lb",
+        // "levant_ar",
+        // "levant",
+        // "lt",
+        // "lv",
+        // "mk",
+        // "mm",
+        // "mn",
+        // "mx",
+        // "my",
+        // "n_africa",
+        // "nl",
+        // "no",
+        // "nz",
+        // "pe",
+        // "ph",
+        // "pk",
+        // "pl",
+        // "ps",
+        // "pt",
+        // "py",
+        // "ro",
+        // "rs",
+        // "ru",
+        // "sa_en",
+        // "sa",
+        // "se",
+        // "sec",
+        // "sg",
+        // "si",
+        // "sk",
+        // "th",
+        // "tr",
+        // "tw",
+        // "ua",
+        // "uk",
+        // "us",
+        // "uy",
+        // "uz_ru",
+        // "uz_uz",
+        // "vn",
+        // "za"
+        
+    ];
+
+    var checkarr = new Object();
+    var now = 0;
+    var total = 0;
+    
+    for(var Tsite of sitearr) {
+        checkarr[Tsite] = "Ready";
+        total++;
+    }
+
+    var worker = cluster.fork({'site': sitearr[now]});
+
+    // When worker is created
+    cluster.on('online', function(worker) {
+        //console.log('Worker ID : ' + worker.process.pid);
+        checkarr[Object.keys(checkarr)[now]] = "Loading";
+    });
+
+    // When worker is dead
+    cluster.on('exit', (worker, code, signal) => {
+        // if Worker worked well
+        if(checkarr[Object.keys(checkarr)[now]] == "Done") {
+            now++;
+            if(now != total) createWorker(sitearr[now]);
+            else {
+                notice();
+                console.log();
+                console.log("All Working is done!!")
+            }
+        }
+        // if Worker couldn't work, Retry same working
+        else if(checkarr[Object.keys(checkarr)[now]] == "Ready") {
+            checkarr[Object.keys(checkarr)[now]] = "Retry";
+            worker = cluster.fork({'site': sitearr[now]});
+        }
+        // if Retrying work also couldn't work, Skip and go to next work
+        else {
+            checkarr[Object.keys(checkarr)[now]] = "Error";
+            now++;
+            if(now != total) createWorker(sitearr[now]);
+            else {
+                notice();
+                console.log("All Working is done!!")
+            }
+        }
+    });
+    
+    /////////////////////////////////////// Create Worker Funtion ///////////////////////////////////////////
+    function createWorker(site) {
+        var worker = cluster.fork({'site': site});
+        worker.on('message', function (msg) {
+            if(msg.type == "end"){
+                checkarr[Object.keys(checkarr)[now]] = "Done";
+            } else {
+                notice();
+            }
+        });
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    worker.on('message', function (msg) {
+        if(msg.type == "end"){
+            checkarr[Object.keys(checkarr)[now]] = "Done";
+        } else {
+            notice();
+        }
+    });
+
+    function notice() {
+       
+        console.log("--------------------------------- Progress ---------------------------------");
+          
+        for(var i = 0 ; i < Object.keys(checkarr).length; i++) {
+            process.stdout.write(Object.keys(checkarr)[i] + " : " + Object.values(checkarr)[i] + " | ");
+        }    
+        
+    }
+
+} else {
+    process.setMaxListeners(50);
+    
+    console.log(cluster.worker.process.env.site);
+    task(cluster.worker.process.env.site);   
+}
