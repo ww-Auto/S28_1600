@@ -6,6 +6,17 @@ const convertString = require('./lib/convertString.js');
 const list = require('./cfg/homeURL_copy.json');
 
 exports.GNB = async function(now, t) {
+    var home = list[now];
+    var sc = home.split('/')[3];
+
+    // 이미 완료된 아웃풋 확인 후 스킵
+    var dir = fs.existsSync('./output/gnb_' + now + '.json');
+    if(dir){
+        console.log("gnb_" + now + " - Already Done!");
+        process.send({ type : "end", from: process.pid});
+        process.exit(0);
+    }
+
     const browser = await playwright.chromium.launch({headless: true, args: ['--start-maximized']});
     const context = await browser.newContext({viewport: {width: 1920, height: 1080}});
     context.setDefaultTimeout(40000);
@@ -13,8 +24,6 @@ exports.GNB = async function(now, t) {
     var resultArray = new Array();
 
     // Go to Home
-    var home = list[now];
-    var sc = home.split('/')[3];
     await page.goto(home);
     await page.waitForTimeout(2000);
     await clickCookie(page, sc);
@@ -58,26 +67,9 @@ exports.GNB = async function(now, t) {
             rs.source = home;
 
             // Crwaling dept anchor and click CTA to redirection
-            await page.waitForLoadState('networkidle');
             await page.locator(bSelector + " > button").click();
             var ctaIndex = list.indexOf(cta)
             var d1 = await page.locator(cSelector).nth(ctaIndex).innerText();
-
-            if (cta) {
-                var xpath = await page.evaluate((el) => {
-                    var getElementXPath = (element) => {
-                        if (!element || !element.tagName) return '';
-                        var parentPath = getElementXPath(element.parentNode);
-                        var tagName = element.tagName.toLowerCase();
-                        var index = Array.from(element.parentNode.children).filter(e => e.tagName === tagName).indexOf(element) + 1;
-                        return (parentPath ? parentPath + '/' : '') + `${tagName}[${index}]`;
-                    };
-                return getElementXPath(el);
-                }, cta);
-            
-                console.log("xpath : " +xpath.toString());
-                rs.xPath = xpath.toString();
-            }
 
             d1 = convertString.replaceR(d1);
             rs.anchor = d0 + " >> " + d1;
@@ -138,10 +130,8 @@ exports.GNB = async function(now, t) {
                 await page.locator(bSelector + " > button").click();
                 var ctaIndex = thum.indexOf(cta)
                 var d1 = await page.locator(tSelector).nth(ctaIndex).innerText();
-                var xp = await page.locator(tSelector).nth(ctaIndex).textContent();
                 d1 = convertString.replaceR(d1);
                 rs.anchor = d0 + " >> " + d1;
-                rs.xPath = xp;
     
                 // Check if CTA is hidden element
                 try{
@@ -198,14 +188,12 @@ exports.GNB = async function(now, t) {
         rs.source = home;
 
         var d1 = await page.locator(dSelector).nth(ctaIndex).innerText();
-        var xp = await page.locator(dSelector).nth(ctaIndex).textContent();
 
         // Crwaling dept anchor and click CTA to redirection
         await page.locator(dSelector).nth(ctaIndex).click();
             
         d1 = convertString.replaceR(d1);
         rs.anchor = d1;
-        rs.xPath = xp;
         
         // Crwaling Redirection Page's URL and status code
         await page.waitForLoadState("load");
@@ -221,7 +209,7 @@ exports.GNB = async function(now, t) {
 
     console.log(resultArray);
     let result = JSON.stringify(resultArray,null,2);
-    fs.writeFileSync('./output/sample_' + sc + '.json', result);
+    fs.writeFileSync('./output/gnb_' + now + '.json', result);
     console.log("GNB BrokenLink Result Saved!");
     
     // const workBook = xlsx.utils.book_new();
